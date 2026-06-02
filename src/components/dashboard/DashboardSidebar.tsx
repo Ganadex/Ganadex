@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
-import type { User } from "@supabase/supabase-js";
+import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 const navItems = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Resumen" },
@@ -21,7 +21,7 @@ const navItems = [
 ];
 
 interface Props {
-  user: User;
+  user: SupabaseUser;
 }
 
 export function DashboardSidebar({ user }: Props) {
