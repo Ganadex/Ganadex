@@ -182,7 +182,7 @@ export default async function AnimalPage({ params }: Props) {
                   Videos
                 </h2>
                 <div className="space-y-4">
-                  {a.videos.map((v) => (
+                  {a.videos.map((v: { id: string; title?: string; url: string; thumbnail_url?: string }) => (
                     <div key={v.id}>
                       {v.title && <p className="text-dark-300 text-sm mb-2">{v.title}</p>}
                       <video

@@ -95,7 +95,7 @@ export default async function MyAnimalsPage() {
                           <div>
                             <p className="text-white font-medium text-sm">{a.nombre}</p>
                             <p className="text-dark-500 text-xs">
-                              {(a.raza as { nombre: string } | null)?.nombre ?? a.categoria}
+                              {(a.raza as unknown as { nombre: string } | null)?.nombre ?? a.categoria}
                             </p>
                           </div>
                         </div>
