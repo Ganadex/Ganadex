@@ -54,20 +54,21 @@ export default async function AnimalPage({ params }: Props) {
   // Incrementar vistas
   await supabase.rpc("increment_vistas", { ganado_id: id });
 
-  const a = animal as unknown as Animal;
-  const images = (a.images ?? []).sort((x, y) => (x.order ?? 0) - (y.order ?? 0));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const a = animal as any;
+  const images = (a.images ?? []).sort((x: any, y: any) => (x.orden ?? 0) - (y.orden ?? 0));
 
   const details = [
-    { icon: Tag, label: "Categoría", value: getCategoryLabel(a.category) },
-    { icon: Tag, label: "Sexo", value: getSexLabel(a.sex) },
-    { icon: Calendar, label: "Edad", value: formatAge(a.age_months) },
-    { icon: Weight, label: "Peso", value: formatWeight(a.weight_kg) },
-    { icon: MapPin, label: "Ubicación", value: `${a.location}, ${a.state}, ${a.country}` },
-    { icon: Eye, label: "Vistas", value: a.views.toLocaleString("es-CO") },
+    { icon: Tag, label: "Categoría", value: getCategoryLabel(a.categoria) },
+    { icon: Tag, label: "Sexo", value: getSexLabel(a.sexo) },
+    { icon: Calendar, label: "Edad", value: formatAge(a.edad_meses) },
+    { icon: Weight, label: "Peso", value: formatWeight(a.peso_kg) },
+    { icon: MapPin, label: "Ubicación", value: `${a.ubicacion}, ${a.estado}, ${a.pais}` },
+    { icon: Eye, label: "Vistas", value: (a.vistas ?? 0).toLocaleString("es-CO") },
   ];
 
-  if (a.registration_number) {
-    details.push({ icon: FileText, label: "No. Registro", value: a.registration_number });
+  if (a.numero_registro) {
+    details.push({ icon: FileText, label: "No. Registro", value: a.numero_registro });
   }
 
   return (
@@ -79,14 +80,14 @@ export default async function AnimalPage({ params }: Props) {
           <span>/</span>
           <a href="/ganado" className="hover:text-gold-400 transition-colors">Ganado</a>
           <span>/</span>
-          <span className="text-dark-200">{a.name}</span>
+          <span className="text-dark-200">{a.nombre}</span>
         </nav>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left: Gallery + info */}
           <div className="lg:col-span-2 space-y-8">
             {/* Gallery */}
-            <AnimalGallery images={images} animalName={a.name} />
+            <AnimalGallery images={images} animalName={a.nombre} />
 
             {/* Heading */}
             <div>
@@ -95,10 +96,10 @@ export default async function AnimalPage({ params }: Props) {
                   {a.breed.nombre}
                 </p>
               )}
-              <h1 className="text-3xl md:text-4xl font-black text-white mb-3">{a.name}</h1>
+              <h1 className="text-3xl md:text-4xl font-black text-white mb-3">{a.nombre}</h1>
               <div className="flex items-center gap-4">
                 <p className="text-3xl font-black text-gradient-gold">
-                  {formatPrice(a.price, a.currency)}
+                  {formatPrice(a.precio, a.moneda)}
                 </p>
                 <span
                   className={`text-xs px-3 py-1.5 rounded-full font-semibold ${
@@ -140,12 +141,12 @@ export default async function AnimalPage({ params }: Props) {
                 Descripción
               </h2>
               <p className="text-dark-200 leading-relaxed text-sm whitespace-pre-line">
-                {a.description}
+                {a.descripcion}
               </p>
             </div>
 
             {/* Genetic info */}
-            {a.genetic_info && (
+            {a.informacion_genetica && (
               <div className="card-dark p-6">
                 <div className="flex items-center gap-2 mb-4">
                   <Dna size={16} className="text-gold-500" />
@@ -154,7 +155,7 @@ export default async function AnimalPage({ params }: Props) {
                   </h2>
                 </div>
                 <p className="text-dark-200 leading-relaxed text-sm whitespace-pre-line">
-                  {a.genetic_info}
+                  {a.informacion_genetica}
                 </p>
               </div>
             )}
@@ -201,7 +202,7 @@ export default async function AnimalPage({ params }: Props) {
 
           {/* Right: Ganadex contact */}
           <div className="space-y-4">
-            <GanadexContactCard animalName={a.name} />
+            <GanadexContactCard animalName={a.nombre} />
 
             {/* Share */}
             <div className="card-dark p-5">

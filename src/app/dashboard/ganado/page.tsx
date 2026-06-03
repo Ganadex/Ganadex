@@ -30,6 +30,7 @@ export default async function MyAnimalsPage() {
   const { data: animals } = await supabase
     .from("ganado")
     .select(`id, nombre, precio, moneda, status, vistas, categoria, created_at,
+      raza:razas(nombre),
       images:imagenes_ganado(url, es_portada)`)
     .eq("vendedor_id", seller.id)
     .order("created_at", { ascending: false });
@@ -93,7 +94,9 @@ export default async function MyAnimalsPage() {
                           </div>
                           <div>
                             <p className="text-white font-medium text-sm">{a.nombre}</p>
-                            <p className="text-dark-500 text-xs capitalize">{a.categoria}</p>
+                            <p className="text-dark-500 text-xs">
+                              {(a.raza as { nombre: string } | null)?.nombre ?? a.categoria}
+                            </p>
                           </div>
                         </div>
                       </td>
