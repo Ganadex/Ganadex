@@ -29,8 +29,8 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
     raza_id: (initialData?.raza_id as string) ?? "",
     categoria: (initialData?.categoria as string) ?? "carne",
     sexo: (initialData?.sexo as string) ?? "macho",
-    edad_meses: (initialData?.edad_meses as number) ?? 12,
-    peso_kg: (initialData?.peso_kg as number) ?? 400,
+    edad_meses: (initialData?.edad_meses as number) ?? ("" as unknown as number),
+    peso_kg: (initialData?.peso_kg as number) ?? ("" as unknown as number),
     precio: (initialData?.precio as number) ?? ("" as unknown as number),
     moneda: (initialData?.moneda as string) ?? "COP",
     ubicacion: (initialData?.ubicacion as string) ?? "",
@@ -241,8 +241,9 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
               required
               min={1}
               max={360}
-              value={form.edad_meses}
-              onChange={(e) => update("edad_meses", Number(e.target.value))}
+              placeholder="Ej: 24"
+              value={form.edad_meses === 0 && !initialData ? "" : form.edad_meses}
+              onChange={(e) => update("edad_meses", e.target.value === "" ? ("" as unknown as number) : Number(e.target.value))}
               className={inputClass}
             />
           </div>
@@ -253,8 +254,9 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
               type="number"
               required
               min={1}
-              value={form.peso_kg}
-              onChange={(e) => update("peso_kg", Number(e.target.value))}
+              placeholder="Ej: 450"
+              value={form.peso_kg === 0 && !initialData ? "" : form.peso_kg}
+              onChange={(e) => update("peso_kg", e.target.value === "" ? ("" as unknown as number) : Number(e.target.value))}
               className={inputClass}
             />
           </div>
