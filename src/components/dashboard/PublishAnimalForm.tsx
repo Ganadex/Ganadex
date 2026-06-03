@@ -145,7 +145,7 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
       }
 
       setSuccess(true);
-      setTimeout(() => router.push(`/ganado/${animal.id}`), 2000);
+      setTimeout(() => router.push("/dashboard/ganado"), 2000);
     } catch {
       setError("Ocurrió un error al publicar. Intenta de nuevo.");
     } finally {
