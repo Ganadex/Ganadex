@@ -13,21 +13,17 @@ const stats = [
 export function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Video de fondo */}
+      {/* Imagen de fondo */}
       <div className="absolute inset-0 z-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          className="w-full h-full object-cover opacity-30"
-          poster="/images/hero-poster.jpg"
-        >
-          <source src="/videos/hero-cattle.mp4" type="video/mp4" />
-        </video>
-        {/* Gradientes de overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-dark-900/80 via-dark-900/60 to-dark-900" />
-        <div className="absolute inset-0 bg-gradient-to-r from-dark-900/70 via-transparent to-dark-900/70" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/hero-bg.jpg"
+          alt="Ganado de alta genética"
+          className="w-full h-full object-cover"
+        />
+        {/* Overlays para legibilidad del texto */}
+        <div className="absolute inset-0 bg-gradient-to-b from-dark-900/70 via-dark-900/50 to-dark-900" />
+        <div className="absolute inset-0 bg-gradient-to-r from-dark-900/80 via-dark-900/30 to-dark-900/20" />
       </div>
 
       {/* Decoración dorada */}
