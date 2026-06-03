@@ -44,6 +44,8 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
 
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [registroFiles, setRegistroFiles] = useState<File[]>([]);
+  const [registroNames, setRegistroNames] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -127,6 +129,17 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
               es_portada: idx === 0,
               orden: idx,
             });
+          })
+        );
+      }
+
+      // Subir documentos de registro genético
+      if (registroFiles.length > 0) {
+        await Promise.all(
+          registroFiles.map(async (file, idx) => {
+            const ext = file.name.split(".").pop();
+            const path = `ganado/${animal.id}/registro/${idx}.${ext}`;
+            await supabase.storage.from("ganadex-media").upload(path, file, { upsert: true });
           })
         );
       }
@@ -350,29 +363,63 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
               rows={4}
               value={form.descripcion}
               onChange={(e) => update("descripcion", e.target.value)}
-              placeholder="Describe las características del ejemplar..."
+              placeholder="Describe las características del ejemplar: temperamento, condición corporal, historial productivo..."
               className={`${inputClass} resize-none`}
             />
           </div>
           <div>
-            <label className={labelClass}>Información genética</label>
+            <label className={labelClass}>
+              Información genética{" "}
+              <span className="text-dark-500 font-normal normal-case">(opcional)</span>
+            </label>
             <textarea
               rows={3}
               value={form.informacion_genetica}
               onChange={(e) => update("informacion_genetica", e.target.value)}
-              placeholder="DEP, EPD, % razas, pruebas genéticas..."
+              placeholder="DEP, EPD, % de razas, pruebas genéticas..."
               className={`${inputClass} resize-none`}
             />
-          </div>
-          <div>
-            <label className={labelClass}>Pedigrí</label>
-            <textarea
-              rows={3}
-              value={form.pedigree}
-              onChange={(e) => update("pedigree", e.target.value)}
-              placeholder="Padre, madre, abuelos..."
-              className={`${inputClass} resize-none`}
-            />
+            {/* Subir documento de registro */}
+            <div className="mt-3">
+              <p className="text-dark-400 text-xs mb-2">
+                Documento de registro genético{" "}
+                <span className="text-dark-500">(opcional — súbelo si cuentas con él: foto o PDF del certificado)</span>
+              </p>
+              {registroNames.length > 0 && (
+                <div className="space-y-1 mb-2">
+                  {registroNames.map((name, i) => (
+                    <div key={i} className="flex items-center justify-between bg-dark-700 rounded-lg px-3 py-2">
+                      <span className="text-dark-200 text-xs truncate">{name}</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setRegistroFiles((p) => p.filter((_, idx) => idx !== i));
+                          setRegistroNames((p) => p.filter((_, idx) => idx !== i));
+                        }}
+                        className="text-dark-500 hover:text-red-400 ml-2 shrink-0"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <label className="flex items-center gap-2 cursor-pointer border border-dashed border-dark-600 rounded-lg px-4 py-3 hover:border-gold-600 transition-colors w-fit">
+                <Upload size={14} className="text-dark-400" />
+                <span className="text-dark-300 text-xs">Subir foto o PDF del registro</span>
+                <input
+                  type="file"
+                  accept="image/*,.pdf"
+                  multiple
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files ?? []);
+                    setRegistroFiles((p) => [...p, ...files]);
+                    setRegistroNames((p) => [...p, ...files.map((f) => f.name)]);
+                  }}
+                  className="sr-only"
+                />
+              </label>
+            </div>
           </div>
         </div>
       </div>
