@@ -4,9 +4,9 @@ export type AnimalStatus = "disponible" | "vendido" | "reservado";
 
 export interface Breed {
   id: string;
-  name: string;
-  category: Category;
-  origin: string;
+  nombre: string;
+  categoria: Category;
+  origen: string;
   created_at: string;
 }
 

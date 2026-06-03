@@ -176,7 +176,7 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
             >
               <option value="">Seleccionar raza</option>
               {breeds.map((b) => (
-                <option key={b.id} value={b.id}>{b.name}</option>
+                <option key={b.id} value={b.id}>{b.nombre}</option>
               ))}
             </select>
           </div>

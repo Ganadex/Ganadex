@@ -74,7 +74,7 @@ export function AnimalCard({ animal, compact = false }: Props) {
         <div className="mb-3">
           {animal.breed && (
             <p className="text-gold-500 text-xs font-semibold uppercase tracking-wider mb-1">
-              {animal.breed.name}
+              {animal.breed.nombre}
             </p>
           )}
           <h3 className="text-white font-bold text-lg leading-tight line-clamp-1 group-hover:text-gold-400 transition-colors">

@@ -92,7 +92,7 @@ export default async function AnimalPage({ params }: Props) {
             <div>
               {a.breed && (
                 <p className="text-gold-500 text-sm font-semibold uppercase tracking-wider mb-1">
-                  {a.breed.name}
+                  {a.breed.nombre}
                 </p>
               )}
               <h1 className="text-3xl md:text-4xl font-black text-white mb-3">{a.name}</h1>

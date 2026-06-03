@@ -114,7 +114,7 @@ export function FilterSidebar({ breeds, states }: Props) {
               <option value="">Todas las razas</option>
               {breeds.map((b) => (
                 <option key={b.id} value={b.id}>
-                  {b.name}
+                  {b.nombre}
                 </option>
               ))}
             </select>
