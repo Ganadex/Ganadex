@@ -49,7 +49,14 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
   const [success, setSuccess] = useState(false);
 
   const update = <K extends keyof typeof form>(k: K, v: typeof form[K]) =>
-    setForm((prev) => ({ ...prev, [k]: v }));
+    setForm((prev) => ({
+      ...prev,
+      [k]: v,
+      // Al cambiar categoría, resetear raza si no coincide
+      ...(k === "categoria" ? { raza_id: "" } : {}),
+    }));
+
+  const filteredBreeds = breeds.filter((b) => b.categoria === form.categoria);
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
@@ -175,7 +182,7 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
               className={inputClass}
             >
               <option value="">Seleccionar raza</option>
-              {breeds.map((b) => (
+              {filteredBreeds.map((b) => (
                 <option key={b.id} value={b.id}>{b.nombre}</option>
               ))}
             </select>
