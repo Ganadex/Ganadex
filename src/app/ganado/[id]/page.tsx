@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { AnimalGallery } from "@/components/animal/AnimalGallery";
-import { SellerCard } from "@/components/animal/SellerCard";
+import { GanadexContactCard } from "@/components/animal/GanadexContactCard";
 import {
   formatAge,
   formatPrice,
@@ -43,7 +43,6 @@ export default async function AnimalPage({ params }: Props) {
     .from("ganado")
     .select(
       `*, breed:razas(*),
-      seller:vendedores(*),
       images:imagenes_ganado(*, order),
       videos:videos_ganado(*)`
     )
@@ -200,11 +199,9 @@ export default async function AnimalPage({ params }: Props) {
             )}
           </div>
 
-          {/* Right: Seller + sticky CTA */}
+          {/* Right: Ganadex contact */}
           <div className="space-y-4">
-            {a.seller && (
-              <SellerCard seller={a.seller as unknown as import("@/types").Seller} animalName={a.name} />
-            )}
+            <GanadexContactCard animalName={a.name} />
 
             {/* Share */}
             <div className="card-dark p-5">
