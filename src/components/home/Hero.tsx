@@ -3,12 +3,6 @@
 import Link from "next/link";
 import { ArrowRight, ShieldCheck, Star, TrendingUp } from "lucide-react";
 
-const stats = [
-  { label: "Ejemplares activos", value: "2,400+" },
-  { label: "Vendedores verificados", value: "180+" },
-  { label: "Razas disponibles", value: "22" },
-  { label: "Países", value: "8" },
-];
 
 export function Hero() {
   return (
@@ -78,20 +72,6 @@ export function Hero() {
           ))}
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-          {stats.map(({ label, value }) => (
-            <div
-              key={label}
-              className="bg-dark-800/60 backdrop-blur-sm border border-dark-600 rounded-xl p-5"
-            >
-              <div className="text-2xl md:text-3xl font-black text-gradient-gold mb-1">
-                {value}
-              </div>
-              <div className="text-xs text-dark-300">{label}</div>
-            </div>
-          ))}
-        </div>
       </div>
 
       {/* Scroll indicator */}

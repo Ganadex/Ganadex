@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
 @theme {
   --color-gold-50: #fefce8;
   --color-gold-100: #fef9c3;
