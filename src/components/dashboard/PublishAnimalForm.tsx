@@ -174,6 +174,20 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
           </div>
 
           <div>
+            <label className={labelClass}>Categoría *</label>
+            <select
+              required
+              value={form.categoria}
+              onChange={(e) => update("categoria", e.target.value)}
+              className={inputClass}
+            >
+              {categories.map((c) => (
+                <option key={c.value} value={c.value}>{c.label}</option>
+              ))}
+            </select>
+          </div>
+
+          <div>
             <label className={labelClass}>Raza *</label>
             <select
               required
@@ -184,20 +198,6 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
               <option value="">Seleccionar raza</option>
               {filteredBreeds.map((b) => (
                 <option key={b.id} value={b.id}>{b.nombre}</option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className={labelClass}>Categoría *</label>
-            <select
-              required
-              value={form.categoria}
-              onChange={(e) => update("categoria", e.target.value)}
-              className={inputClass}
-            >
-              {categories.map((c) => (
-                <option key={c.value} value={c.value}>{c.label}</option>
               ))}
             </select>
           </div>
