@@ -29,9 +29,9 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
     raza_id: (initialData?.raza_id as string) ?? "",
     categoria: (initialData?.categoria as string) ?? "carne",
     sexo: (initialData?.sexo as string) ?? "macho",
-    edad_meses: (initialData?.edad_meses as number) ?? ("" as unknown as number),
-    peso_kg: (initialData?.peso_kg as number) ?? ("" as unknown as number),
-    precio: (initialData?.precio as number) ?? ("" as unknown as number),
+    edad_meses: initialData?.edad_meses ? String(initialData.edad_meses) : "",
+    peso_kg: initialData?.peso_kg ? String(initialData.peso_kg) : "",
+    precio: initialData?.precio ? String(initialData.precio) : "",
     moneda: (initialData?.moneda as string) ?? "COP",
     ubicacion: (initialData?.ubicacion as string) ?? "",
     estado: (initialData?.estado as string) ?? "",
@@ -242,8 +242,8 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
               min={1}
               max={360}
               placeholder="Ej: 24"
-              value={form.edad_meses === 0 && !initialData ? "" : form.edad_meses}
-              onChange={(e) => update("edad_meses", e.target.value === "" ? ("" as unknown as number) : Number(e.target.value))}
+              value={form.edad_meses}
+              onChange={(e) => update("edad_meses", e.target.value)}
               className={inputClass}
             />
           </div>
@@ -255,8 +255,8 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
               required
               min={1}
               placeholder="Ej: 450"
-              value={form.peso_kg === 0 && !initialData ? "" : form.peso_kg}
-              onChange={(e) => update("peso_kg", e.target.value === "" ? ("" as unknown as number) : Number(e.target.value))}
+              value={form.peso_kg}
+              onChange={(e) => update("peso_kg", e.target.value)}
               className={inputClass}
             />
           </div>
@@ -268,8 +268,8 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
               required
               min={0}
               placeholder="Ej: 5000000"
-              value={form.precio === 0 && !initialData ? "" : form.precio}
-              onChange={(e) => update("precio", e.target.value === "" ? ("" as unknown as number) : Number(e.target.value))}
+              value={form.precio}
+              onChange={(e) => update("precio", e.target.value)}
               className={inputClass}
             />
           </div>
