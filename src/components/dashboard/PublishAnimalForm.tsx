@@ -31,7 +31,7 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
     sexo: (initialData?.sexo as string) ?? "macho",
     edad_meses: (initialData?.edad_meses as number) ?? 12,
     peso_kg: (initialData?.peso_kg as number) ?? 400,
-    precio: (initialData?.precio as number) ?? 0,
+    precio: (initialData?.precio as number) ?? ("" as unknown as number),
     moneda: (initialData?.moneda as string) ?? "COP",
     ubicacion: (initialData?.ubicacion as string) ?? "",
     estado: (initialData?.estado as string) ?? "",
@@ -265,8 +265,9 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
               type="number"
               required
               min={0}
-              value={form.precio}
-              onChange={(e) => update("precio", Number(e.target.value))}
+              placeholder="Ej: 5000000"
+              value={form.precio === 0 && !initialData ? "" : form.precio}
+              onChange={(e) => update("precio", e.target.value === "" ? ("" as unknown as number) : Number(e.target.value))}
               className={inputClass}
             />
           </div>
