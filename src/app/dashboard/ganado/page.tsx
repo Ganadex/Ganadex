@@ -81,7 +81,7 @@ export default async function MyAnimalsPage() {
                   return (
                     <tr key={a.id} className="hover:bg-dark-700/40 transition-colors">
                       <td className="px-5 py-4">
-                        <div className="flex items-center gap-3">
+                        <Link href={`/ganado/${a.id}`} target="_blank" className="flex items-center gap-3 group/name">
                           <div className="w-12 h-12 rounded-xl bg-dark-700 overflow-hidden shrink-0">
                             {cover && (
                               // eslint-disable-next-line @next/next/no-img-element
@@ -93,12 +93,12 @@ export default async function MyAnimalsPage() {
                             )}
                           </div>
                           <div>
-                            <p className="text-white font-medium text-sm">{a.nombre}</p>
+                            <p className="text-white font-medium text-sm group-hover/name:text-gold-400 transition-colors">{a.nombre}</p>
                             <p className="text-dark-500 text-xs">
                               {(a.raza as unknown as { nombre: string } | null)?.nombre ?? a.categoria}
                             </p>
                           </div>
-                        </div>
+                        </Link>
                       </td>
                       <td className="px-5 py-4 hidden sm:table-cell">
                         <span className="text-gold-500 font-semibold text-sm">
