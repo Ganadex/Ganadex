@@ -43,7 +43,7 @@ export default async function AnimalPage({ params }: Props) {
     .from("ganado")
     .select(
       `*, breed:razas(*),
-      images:imagenes_ganado(*, order),
+      images:imagenes_ganado(*),
       videos:videos_ganado(*)`
     )
     .eq("id", id)
