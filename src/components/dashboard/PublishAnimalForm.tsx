@@ -58,6 +58,14 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
 
   const filteredBreeds = breeds.filter((b) => b.categoria === form.categoria);
 
+  const formatPrecio = (raw: string) =>
+    raw ? Number(raw).toLocaleString("es-CO") : "";
+
+  const handlePrecioChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const raw = e.target.value.replace(/\./g, "").replace(/\D/g, "");
+    update("precio", raw);
+  };
+
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     const valid = files.filter((f) => f.type.startsWith("image/")).slice(0, 8 - images.length);
@@ -264,12 +272,12 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
           <div>
             <label className={labelClass}>Precio *</label>
             <input
-              type="number"
+              type="text"
               required
-              min={0}
-              placeholder="Ej: 5000000"
-              value={form.precio}
-              onChange={(e) => update("precio", e.target.value)}
+              inputMode="numeric"
+              placeholder="Ej: 5.000.000"
+              value={formatPrecio(form.precio)}
+              onChange={handlePrecioChange}
               className={inputClass}
             />
           </div>
