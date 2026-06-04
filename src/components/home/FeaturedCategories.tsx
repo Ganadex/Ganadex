@@ -13,9 +13,11 @@ const categories = [
     borderColor: "border-blue-700/30",
     iconColor: "text-blue-400",
     badgeColor: "bg-blue-900/40 text-blue-300",
+    bgImage: "/categoria-leche.jpg",
   },
   {
     href: "/ganado-carne",
+    bgImage: undefined,
     icon: Beef,
     title: "Ganado de Carne",
     description:
@@ -29,6 +31,7 @@ const categories = [
   },
   {
     href: "/doble-proposito",
+    bgImage: undefined,
     icon: Layers,
     title: "Doble Propósito",
     description:
@@ -73,14 +76,28 @@ export function FeaturedCategories() {
               iconColor,
               badgeColor,
               featured,
+              bgImage,
             }) => (
               <Link
                 key={href}
                 href={href}
-                className={`relative group rounded-2xl border p-8 transition-all duration-300 bg-gradient-to-br ${color} ${borderColor} hover:border-gold-600/50 hover:shadow-xl hover:shadow-gold-900/20 hover:-translate-y-1`}
+                className={`relative group rounded-2xl border p-8 transition-all duration-300 overflow-hidden bg-gradient-to-br ${color} ${borderColor} hover:border-gold-600/50 hover:shadow-xl hover:shadow-gold-900/20 hover:-translate-y-1`}
               >
+                {/* Imagen de fondo opcional */}
+                {bgImage && (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={bgImage}
+                      alt=""
+                      className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-30 transition-opacity duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-br from-dark-900/60 to-dark-900/40" />
+                  </>
+                )}
+                <div className="relative z-10">
                 {featured && (
-                  <div className="absolute top-4 right-4 bg-gold-600 text-dark-900 text-xs font-bold px-2.5 py-1 rounded-full">
+                  <div className="absolute top-0 right-0 bg-gold-600 text-dark-900 text-xs font-bold px-2.5 py-1 rounded-full">
                     Popular
                   </div>
                 )}
@@ -111,6 +128,7 @@ export function FeaturedCategories() {
                   <span>Ver {title}</span>
                   <span>→</span>
                 </div>
+                </div>{/* end relative z-10 */}
               </Link>
             )
           )}
