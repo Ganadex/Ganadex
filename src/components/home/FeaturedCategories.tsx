@@ -17,7 +17,7 @@ const categories = [
   },
   {
     href: "/ganado-carne",
-    bgImage: undefined,
+    bgImage: "/categoria-carne.jpg",
     icon: Beef,
     title: "Ganado de Carne",
     description:
