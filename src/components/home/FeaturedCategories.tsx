@@ -31,7 +31,7 @@ const categories = [
   },
   {
     href: "/doble-proposito",
-    bgImage: undefined,
+    bgImage: "/categoria-doble.jpg",
     icon: Layers,
     title: "Doble Propósito",
     description:
