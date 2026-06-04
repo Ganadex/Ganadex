@@ -20,7 +20,7 @@ export async function RegistroCarousel() {
   if (!animals || animals.length === 0) return null;
 
   return (
-    <section className="py-12 bg-dark-900 border-t border-dark-800">
+    <section className="py-10 relative z-10 bg-gradient-to-b from-transparent to-dark-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">

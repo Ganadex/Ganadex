@@ -6,7 +6,7 @@ import { ArrowRight, ShieldCheck, Star, TrendingUp } from "lucide-react";
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section className="relative overflow-hidden">
       {/* Imagen de fondo */}
       <div className="absolute inset-0 z-0">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -23,7 +23,7 @@ export function Hero() {
       {/* Decoración dorada */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-gold-600/5 blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-12 text-center">
         {/* Badge */}
         <div className="inline-flex items-center gap-2 bg-dark-800/80 border border-gold-600/40 rounded-full px-4 py-1.5 mb-8 backdrop-blur-sm">
           <Star size={13} className="text-gold-500 fill-gold-500" />
@@ -74,11 +74,6 @@ export function Hero() {
 
       </div>
 
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce">
-        <div className="w-px h-8 bg-gradient-to-b from-gold-500/0 to-gold-500" />
-        <div className="w-1.5 h-1.5 rounded-full bg-gold-500" />
-      </div>
     </section>
   );
 }

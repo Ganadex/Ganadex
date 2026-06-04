@@ -8,8 +8,10 @@ import { CTASection } from "@/components/home/CTASection";
 export default function HomePage() {
   return (
     <>
-      <Hero />
-      <RegistroCarousel />
+      <div className="relative">
+        <Hero />
+        <RegistroCarousel />
+      </div>
       <FeaturedCategories />
       <TrustSection />
       <FeaturedAnimals />
