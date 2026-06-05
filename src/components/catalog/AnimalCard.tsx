@@ -16,7 +16,7 @@ const categoryColors: Record<string, string> = {
 };
 
 export function AnimalCard({ animal, compact = false }: Props) {
-  const coverImage = animal.images?.find((i) => i.is_cover) ?? animal.images?.[0];
+  const coverImage = animal.images?.find((i) => i.es_portada) ?? animal.images?.[0];
   const imageUrl = coverImage?.url ?? "/images/placeholder-animal.jpg";
 
   return (
@@ -30,7 +30,7 @@ export function AnimalCard({ animal, compact = false }: Props) {
       <div className={cn("relative overflow-hidden bg-dark-700", compact ? "h-44" : "h-56")}>
         <Image
           src={imageUrl}
-          alt={animal.name}
+          alt={animal.nombre}
           fill
           className="object-cover group-hover:scale-105 transition-transform duration-500"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -41,12 +41,12 @@ export function AnimalCard({ animal, compact = false }: Props) {
           <span
             className={cn(
               "text-xs px-2.5 py-1 rounded-full border font-medium backdrop-blur-sm",
-              categoryColors[animal.category]
+              categoryColors[animal.categoria]
             )}
           >
-            {getCategoryLabel(animal.category)}
+            {getCategoryLabel(animal.categoria)}
           </span>
-          {animal.featured && (
+          {animal.destacado && (
             <span className="text-xs px-2.5 py-1 rounded-full bg-gold-600/80 text-dark-900 font-bold backdrop-blur-sm">
               Destacado
             </span>
@@ -56,7 +56,7 @@ export function AnimalCard({ animal, compact = false }: Props) {
         {/* Sex badge */}
         <div className="absolute top-3 right-3">
           <span className="text-xs px-2.5 py-1 rounded-full bg-dark-900/70 text-dark-200 backdrop-blur-sm border border-dark-600">
-            {getSexLabel(animal.sex)}
+            {getSexLabel(animal.sexo)}
           </span>
         </div>
 
@@ -78,10 +78,10 @@ export function AnimalCard({ animal, compact = false }: Props) {
             </p>
           )}
           <h3 className="text-white font-bold text-lg leading-tight line-clamp-1 group-hover:text-gold-400 transition-colors">
-            {animal.name}
+            {animal.nombre}
           </h3>
-          {animal.registration_number && (
-            <p className="text-dark-400 text-xs mt-0.5">Reg. {animal.registration_number}</p>
+          {animal.numero_registro && (
+            <p className="text-dark-400 text-xs mt-0.5">Reg. {animal.numero_registro}</p>
           )}
         </div>
 
@@ -89,15 +89,15 @@ export function AnimalCard({ animal, compact = false }: Props) {
         <div className="grid grid-cols-2 gap-2 mb-4">
           <div className="flex items-center gap-1.5 text-dark-300 text-xs">
             <Calendar size={12} className="text-gold-600 shrink-0" />
-            <span>{formatAge(animal.age_months)}</span>
+            <span>{formatAge(animal.edad_meses)}</span>
           </div>
           <div className="flex items-center gap-1.5 text-dark-300 text-xs">
             <Weight size={12} className="text-gold-600 shrink-0" />
-            <span>{formatWeight(animal.weight_kg)}</span>
+            <span>{formatWeight(animal.peso_kg)}</span>
           </div>
           <div className="flex items-center gap-1.5 text-dark-300 text-xs col-span-2">
             <MapPin size={12} className="text-gold-600 shrink-0" />
-            <span className="truncate">{animal.location}, {animal.state}</span>
+            <span className="truncate">{animal.ubicacion}, {animal.estado}</span>
           </div>
         </div>
 
@@ -106,17 +106,17 @@ export function AnimalCard({ animal, compact = false }: Props) {
           <div>
             <p className="text-xs text-dark-400 mb-0.5">Precio</p>
             <p className="text-xl font-black text-gradient-gold">
-              {formatPrice(animal.price, animal.currency)}
+              {formatPrice(animal.precio, animal.moneda)}
             </p>
           </div>
 
           {animal.seller && (
             <div className="flex items-center gap-1.5 text-right">
-              {animal.seller.verified && (
+              {animal.seller.verificado && (
                 <BadgeCheck size={13} className="text-gold-500 shrink-0" />
               )}
               <p className="text-dark-400 text-xs max-w-[90px] truncate">
-                {animal.seller.name}
+                {animal.seller.nombre_completo}
               </p>
             </div>
           )}

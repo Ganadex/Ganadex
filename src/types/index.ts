@@ -30,12 +30,12 @@ export interface Seller {
 }
 
 export interface AnimalImage {
-  id: string;
-  animal_id: string;
+  id?: string;
+  animal_id?: string;
   url: string;
-  is_cover: boolean;
-  order: number;
-  created_at: string;
+  es_portada: boolean;
+  orden?: number;
+  created_at?: string;
 }
 
 export interface AnimalVideo {
@@ -49,29 +49,34 @@ export interface AnimalVideo {
 
 export interface Animal {
   id: string;
-  seller_id: string;
-  breed_id: string;
-  name: string;
-  registration_number?: string;
-  category: Category;
-  sex: Sex;
-  age_months: number;
-  weight_kg: number;
-  price: number;
-  currency: string;
-  location: string;
-  state: string;
-  country: string;
-  description: string;
-  genetic_info?: string;
-  pedigree?: string;
+  vendedor_id?: string;
+  raza_id?: string;
+  nombre: string;
+  numero_registro?: string;
+  categoria: Category;
+  sexo: Sex;
+  edad_meses: number;
+  peso_kg: number;
+  precio: number;
+  moneda: string;
+  ubicacion: string;
+  estado: string;
+  pais?: string;
+  descripcion?: string;
+  informacion_genetica?: string;
   status: AnimalStatus;
-  views: number;
-  featured: boolean;
+  vistas?: number;
+  destacado: boolean;
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
   breed?: Breed;
-  seller?: Seller;
+  seller?: {
+    id: string;
+    nombre_completo: string;
+    ubicacion?: string;
+    estado?: string;
+    verificado?: boolean;
+  };
   images?: AnimalImage[];
   videos?: AnimalVideo[];
 }
