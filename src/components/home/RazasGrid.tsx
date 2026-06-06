@@ -21,7 +21,13 @@ const CRUCE_COLOR = "#f59e0b"; // ámbar
 
 // Mapa de imágenes por raza — se irán agregando
 const RAZA_IMAGES: Record<string, string> = {
-  "Ayrshire": "/RAZAS/AYRSHIRE.jpg",
+  "Ayrshire":    "/RAZAS/AYRSHIRE.jpg",
+  "Girolando":   "/RAZAS/GIROLANDO.jpg",
+  "Gyr":         "/RAZAS/GYR.jpg",
+  "Holstein":    "/RAZAS/HOLSTEIN.jpg",
+  "Jerhol":      "/RAZAS/JERHOL.jpg",
+  "Jersey":      "/RAZAS/jersey.jpg",
+  "Pardo Suizo": "/RAZAS/pardo suizo.jpg",
 };
 
 export async function RazasGrid() {
