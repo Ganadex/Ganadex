@@ -13,6 +13,10 @@ const CATEGORIA_COLORS: Record<string, string> = {
   doble_proposito: "#22c55e",
 };
 
+// Razas que son cruces — reciben color y badge especial
+const CRUCES = new Set(["Girolando", "Jerhol"]);
+const CRUCE_COLOR = "#f59e0b"; // ámbar
+
 // Mapa de imágenes por raza — se irán agregando
 const RAZA_IMAGES: Record<string, string> = {
   // Ejemplo: "Holstein": "/razas/holstein.jpg",
@@ -48,14 +52,19 @@ export async function RazasGrid() {
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {razas.map((raza) => {
             const img = RAZA_IMAGES[raza.nombre];
-            const color = CATEGORIA_COLORS[raza.categoria] ?? "#d4a017";
-            const label = CATEGORIA_LABELS[raza.categoria] ?? raza.categoria;
+            const esCruce = CRUCES.has(raza.nombre);
+            const color = esCruce ? CRUCE_COLOR : (CATEGORIA_COLORS[raza.categoria] ?? "#d4a017");
+            const label = esCruce ? "Cruce lechero" : (CATEGORIA_LABELS[raza.categoria] ?? raza.categoria);
 
             return (
               <Link
                 key={raza.id}
                 href={`/ganado?raza=${raza.id}`}
-                className="group flex flex-col rounded-2xl overflow-hidden border border-dark-700 bg-dark-800 hover:border-gold-500/60 hover:-translate-y-1 transition-all duration-200 shadow-lg"
+                className="group flex flex-col rounded-2xl overflow-hidden border hover:-translate-y-1 transition-all duration-200 shadow-lg"
+                style={{
+                  borderColor: esCruce ? `${CRUCE_COLOR}40` : "#1f2937",
+                  background: esCruce ? "#1c1508" : "#1f2937",
+                }}
               >
                 {/* Imagen / placeholder */}
                 <div className="w-full aspect-square overflow-hidden bg-dark-700 flex items-center justify-center relative">
@@ -94,7 +103,13 @@ export async function RazasGrid() {
                   <p className="text-white font-bold text-sm text-center leading-tight group-hover:text-gold-400 transition-colors">
                     {raza.nombre}
                   </p>
-                  <span className="w-full text-center text-xs font-semibold py-1.5 rounded-lg border border-gold-600/40 text-gold-500 group-hover:bg-gold-600 group-hover:text-dark-900 group-hover:border-gold-600 transition-all">
+                  <span
+                    className="w-full text-center text-xs font-semibold py-1.5 rounded-lg border transition-all group-hover:text-dark-900"
+                    style={{
+                      borderColor: esCruce ? `${CRUCE_COLOR}50` : "#92400e60",
+                      color: esCruce ? CRUCE_COLOR : "#d4a017",
+                    }}
+                  >
                     Ver ganado →
                   </span>
                 </div>

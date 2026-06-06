@@ -1,33 +1,23 @@
 -- Insertar razas (ignorar si ya existen)
 insert into razas (nombre, categoria, origen) values
+  -- Leche (5 razas)
   ('Holstein', 'leche', 'Holanda'),
   ('Jersey', 'leche', 'Reino Unido'),
   ('Pardo Suizo', 'leche', 'Suiza'),
   ('Ayrshire', 'leche', 'Escocia'),
-  ('Guernsey', 'leche', 'Reino Unido'),
-  ('Girolando', 'leche', 'Brasil'),
-  ('Girolando F1', 'leche', 'Brasil'),
-  ('Gyr Lechero', 'leche', 'India'),
-  ('Angus', 'carne', 'Escocia'),
-  ('Brahman', 'carne', 'India'),
-  ('Hereford', 'carne', 'Reino Unido'),
-  ('Charolais', 'carne', 'Francia'),
-  ('Senepol', 'carne', 'Santa Cruz'),
+  ('Gyr', 'leche', 'India'),
+  -- Carne (5 razas)
   ('Nelore', 'carne', 'India/Brasil'),
-  ('Romosinuano', 'carne', 'Colombia'),
-  ('Blanco Orejinegro', 'carne', 'Colombia'),
-  ('Simmental', 'doble_proposito', 'Suiza'),
+  ('Brahman', 'carne', 'India'),
+  ('Angus', 'carne', 'Escocia'),
+  ('Big Máster', 'carne', 'Colombia'),
+  ('Simental', 'carne', 'Suiza'),
+  -- Doble Propósito
   ('Normando', 'doble_proposito', 'Francia'),
-  ('Gyr', 'doble_proposito', 'India'),
   ('Simbrah', 'doble_proposito', 'Brasil'),
   ('Costeno con Cuernos', 'doble_proposito', 'Colombia'),
   ('Lucerna', 'doble_proposito', 'Colombia'),
   ('Velasquez', 'doble_proposito', 'Colombia'),
-  ('Mestizo Lechero', 'leche', 'Colombia'),
-  ('Mestizo de Carne', 'carne', 'Colombia'),
   ('Mestizo Doble Propósito', 'doble_proposito', 'Colombia'),
-  ('Cruce Brahman x Angus', 'carne', 'Colombia'),
-  ('Cruce Brahman x Holstein', 'leche', 'Colombia'),
-  ('Cruce Holstein x Jersey', 'leche', 'Colombia'),
   ('Cruce Normando x Brahman', 'doble_proposito', 'Colombia')
 on conflict (nombre) do nothing;
