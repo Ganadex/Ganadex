@@ -1,4 +1,4 @@
-export type Category = "leche" | "carne" | "doble_proposito";
+export type Category = "leche" | "carne" | "doble_proposito" | "criolla";
 export type Sex = "macho" | "hembra";
 export type AnimalStatus = "disponible" | "vendido" | "reservado";
 

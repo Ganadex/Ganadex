@@ -16,6 +16,7 @@ const categories = [
   { value: "leche", label: "Ganado de Leche" },
   { value: "carne", label: "Ganado de Carne" },
   { value: "doble_proposito", label: "Doble Propósito" },
+  { value: "criolla", label: "Raza Criolla" },
 ];
 
 const currencies = ["COP", "USD", "MXN", "PEN", "ARS", "BRL"];

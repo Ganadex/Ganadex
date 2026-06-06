@@ -31,6 +31,7 @@ export function getCategoryLabel(category: string): string {
     leche: "Ganado de Leche",
     carne: "Ganado de Carne",
     doble_proposito: "Doble Propósito",
+    criolla: "Raza Criolla",
   };
   return map[category] ?? category;
 }

@@ -5,12 +5,14 @@ const CATEGORIA_LABELS: Record<string, string> = {
   leche: "Leche",
   carne: "Carne",
   doble_proposito: "Doble Propósito",
+  criolla: "Criolla",
 };
 
 const CATEGORIA_COLORS: Record<string, string> = {
   leche: "#3b82f6",
   carne: "#ef4444",
   doble_proposito: "#22c55e",
+  criolla: "#a855f7",
 };
 
 // Razas que son cruces — reciben color y badge especial
