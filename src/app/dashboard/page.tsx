@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import Link from "next/link";
 import { PlusCircle, Eye, TrendingUp, Package } from "lucide-react";
+import { getAccess } from "@/lib/permissions";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -16,6 +17,20 @@ export default async function DashboardPage() {
     .single();
 
   if (!seller) {
+    const access = await getAccess();
+    if (access && !access.isAdmin && access.sections.length > 0) {
+      return (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {access.sections.map((s) => (
+            <Link key={s.key} href={s.href} className="card-dark p-6 block">
+              <p className="text-white font-bold">{s.label}</p>
+              <p className="text-dark-400 text-sm mt-1">{s.description}</p>
+            </Link>
+          ))}
+        </div>
+      );
+    }
+
     return (
       <div className="card-dark p-10 text-center">
         <div className="w-16 h-16 rounded-2xl gradient-gold flex items-center justify-center mx-auto mb-6">

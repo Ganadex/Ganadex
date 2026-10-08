@@ -8,6 +8,8 @@ import {
   List,
   User,
   LogOut,
+  Users,
+  Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -22,9 +24,17 @@ const navItems = [
 
 interface Props {
   user: SupabaseUser;
+  isAdmin?: boolean;
+  sections?: { key: string; label: string; href: string }[];
 }
 
-export function DashboardSidebar({ user }: Props) {
+export function DashboardSidebar({ user, isAdmin = false, sections = [] }: Props) {
+  const items = [
+    ...navItems,
+    ...sections.map((s) => ({ href: s.href, icon: Layers, label: s.label })),
+    ...(isAdmin ? [{ href: "/dashboard/equipo", icon: Users, label: "Equipo" }] : []),
+  ];
+
   const pathname = usePathname();
   const router = useRouter();
 
@@ -54,7 +64,7 @@ export function DashboardSidebar({ user }: Props) {
         </div>
 
         <nav className="space-y-1">
-          {navItems.map(({ href, icon: Icon, label }) => (
+          {items.map(({ href, icon: Icon, label }) => (
             <Link
               key={href}
               href={href}

@@ -100,3 +100,14 @@ supabase/
 - [ ] Notificaciones por email (Resend / SendGrid)
 - [ ] Panel de administración
 - [ ] SEO dinámico con sitemap.xml
+
+---
+
+## Equipo y permisos por sección
+
+1. Ejecuta `supabase/team_access.sql` en el SQL Editor (agrega `profiles.permisos`).
+2. Verifica que `SUPABASE_SERVICE_ROLE_KEY` esté en `.env.local` y en Vercel (solo servidor).
+3. Marca tu usuario como admin: `update public.profiles set role = 'admin' where lower(email) = 'tu@correo.com';`
+4. Entra a `/dashboard/equipo` para crear usuarios (correo + contraseña) y elegir sus secciones.
+
+Las secciones asignables se definen en `src/lib/team-sections.ts`. Cada página nueva debe llamar a `requireSection("clave")`.

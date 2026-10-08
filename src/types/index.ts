@@ -109,5 +109,6 @@ export interface Profile {
   full_name?: string;
   avatar_url?: string;
   role: "user" | "seller" | "admin";
+  permisos?: string[];
   created_at: string;
 }
