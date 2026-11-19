@@ -10,7 +10,17 @@ interface Props {
   sellerId: string;
   breeds: Breed[];
   initialData?: Record<string, unknown>;
+  /** Si viene, el formulario edita este animal en vez de crear uno nuevo. */
+  animalId?: string;
+  initialStatus?: string;
+  existingImages?: { id: string; url: string }[];
 }
+
+const statuses = [
+  { value: "disponible", label: "Disponible" },
+  { value: "reservado", label: "Reservado" },
+  { value: "vendido", label: "Vendido" },
+];
 
 const categories = [
   { value: "leche", label: "Ganado de Leche" },
@@ -21,7 +31,15 @@ const categories = [
 
 const currencies = ["COP", "USD", "MXN", "PEN", "ARS", "BRL"];
 
-export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
+export function PublishAnimalForm({
+  sellerId,
+  breeds,
+  initialData,
+  animalId,
+  initialStatus,
+  existingImages = [],
+}: Props) {
+  const isEdit = Boolean(animalId);
   const router = useRouter();
   const supabase = createClient();
 
@@ -43,6 +61,8 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
     numero_registro: (initialData?.numero_registro as string) ?? "",
   });
 
+  const [status, setStatus] = useState(initialStatus ?? "disponible");
+  const [keptImages, setKeptImages] = useState(existingImages);
   const [images, setImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [registroFiles, setRegistroFiles] = useState<File[]>([]);
@@ -71,7 +91,7 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
 
   const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
-    const valid = files.filter((f) => f.type.startsWith("image/")).slice(0, 8 - images.length);
+    const valid = files.filter((f) => f.type.startsWith("image/")).slice(0, 8 - images.length - keptImages.length);
 
     setImages((prev) => [...prev, ...valid]);
     valid.forEach((f) => {
@@ -93,27 +113,55 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
     setError(null);
 
     try {
-      // Insertar ganado
-      const { data: animal, error: insertError } = await supabase
-        .from("ganado")
-        .insert({
-          vendedor_id: sellerId,
-          ...form,
-          edad_meses: Number(form.edad_meses),
-          peso_kg: Number(form.peso_kg),
-          precio: Number(form.precio),
-        })
-        .select("id")
-        .single();
+      const payload = {
+        ...form,
+        edad_meses: Number(form.edad_meses),
+        peso_kg: Number(form.peso_kg),
+        precio: Number(form.precio),
+      };
 
-      if (insertError || !animal) throw insertError ?? new Error("Error al publicar");
+      let currentId: string;
+
+      if (isEdit && animalId) {
+        // Editar: solo el dueño puede (lo exige la política de seguridad)
+        const { data: updated, error: updateError } = await supabase
+          .from("ganado")
+          .update({ ...payload, status })
+          .eq("id", animalId)
+          .select("id");
+
+        if (updateError || !updated || updated.length === 0) {
+          throw updateError ?? new Error("No se pudo guardar");
+        }
+        currentId = animalId;
+
+        // Quitar de la base de datos las fotos que el vendedor eliminó
+        const keptIds = new Set(keptImages.map((i) => i.id));
+        const removed = existingImages.filter((i) => !keptIds.has(i.id));
+        if (removed.length > 0) {
+          await supabase
+            .from("imagenes_ganado")
+            .delete()
+            .in("id", removed.map((i) => i.id));
+        }
+      } else {
+        // Insertar ganado
+        const { data: animal, error: insertError } = await supabase
+          .from("ganado")
+          .insert({ vendedor_id: sellerId, ...payload })
+          .select("id")
+          .single();
+
+        if (insertError || !animal) throw insertError ?? new Error("Error al publicar");
+        currentId = animal.id;
+      }
 
       // Subir imágenes
       if (images.length > 0) {
         await Promise.all(
           images.map(async (file, idx) => {
             const ext = file.name.split(".").pop();
-            const path = `ganado/${animal.id}/${idx}.${ext}`;
+            const path = `ganado/${currentId}/${Date.now()}-${idx}.${ext}`;
             const { error: uploadError } = await supabase.storage
               .from("ganadex-media")
               .upload(path, file, { upsert: true });
@@ -125,10 +173,10 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
               .getPublicUrl(path);
 
             await supabase.from("imagenes_ganado").insert({
-              ganado_id: animal.id,
+              ganado_id: currentId,
               url: publicUrl,
-              es_portada: idx === 0,
-              orden: idx,
+              es_portada: keptImages.length === 0 && idx === 0,
+              orden: keptImages.length + idx,
             });
           })
         );
@@ -139,16 +187,23 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
         await Promise.all(
           registroFiles.map(async (file, idx) => {
             const ext = file.name.split(".").pop();
-            const path = `ganado/${animal.id}/registro/${idx}.${ext}`;
+            const path = `ganado/${currentId}/registro/${Date.now()}-${idx}.${ext}`;
             await supabase.storage.from("ganadex-media").upload(path, file, { upsert: true });
           })
         );
       }
 
       setSuccess(true);
-      setTimeout(() => router.push("/dashboard/ganado"), 2000);
+      setTimeout(() => {
+        router.push("/dashboard/ganado");
+        router.refresh();
+      }, 2000);
     } catch {
-      setError("Ocurrió un error al publicar. Intenta de nuevo.");
+      setError(
+        isEdit
+          ? "No pudimos guardar los cambios. Intenta de nuevo."
+          : "Ocurrió un error al publicar. Intenta de nuevo."
+      );
     } finally {
       setLoading(false);
     }
@@ -160,8 +215,10 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
         <div className="w-16 h-16 rounded-full bg-green-900/40 flex items-center justify-center mx-auto mb-4">
           <CheckCircle size={32} className="text-green-400" />
         </div>
-        <h3 className="text-white font-black text-xl mb-2">¡Publicado con éxito!</h3>
-        <p className="text-dark-300 text-sm">Redirigiendo al perfil del ejemplar...</p>
+        <h3 className="text-white font-black text-xl mb-2">
+          {isEdit ? "¡Cambios guardados!" : "¡Publicado con éxito!"}
+        </h3>
+        <p className="text-dark-300 text-sm">Redirigiendo a tus publicaciones...</p>
       </div>
     );
   }
@@ -174,6 +231,28 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
       {error && (
         <div className="p-4 rounded-xl bg-red-900/30 border border-red-700/40 text-red-300 text-sm">
           {error}
+        </div>
+      )}
+
+      {isEdit && (
+        <div className="card-dark p-6">
+          <h2 className="text-white font-bold mb-2 text-sm uppercase tracking-wider">
+            Estado de la publicación
+          </h2>
+          <p className="text-dark-400 text-xs mb-4">
+            Solo los ejemplares &quot;Disponibles&quot; aparecen en el catálogo público.
+          </p>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-full sm:w-64 bg-dark-700 border border-dark-600 text-white rounded-xl px-4 py-3 text-sm focus:border-gold-500 focus:outline-none transition-colors"
+          >
+            {statuses.map((st) => (
+              <option key={st.value} value={st.value}>
+                {st.label}
+              </option>
+            ))}
+          </select>
         </div>
       )}
 
@@ -431,6 +510,30 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
           Fotos del ejemplar
         </h2>
 
+        {keptImages.length > 0 && (
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
+            {keptImages.map((img, i) => (
+              <div key={img.id} className="relative group aspect-square rounded-xl overflow-hidden bg-dark-700">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={img.url} alt="" className="w-full h-full object-cover" />
+                {i === 0 && (
+                  <span className="absolute top-1.5 left-1.5 text-xs bg-gold-600 text-dark-900 px-1.5 py-0.5 rounded font-bold">
+                    Portada
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setKeptImages((prev) => prev.filter((x) => x.id !== img.id))}
+                  className="absolute top-1.5 right-1.5 w-6 h-6 rounded-full bg-dark-900/80 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                  aria-label="Quitar foto"
+                >
+                  <X size={12} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
         {imagePreviews.length > 0 && (
           <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-4">
             {imagePreviews.map((src, i) => (
@@ -454,12 +557,12 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
           </div>
         )}
 
-        {images.length < 8 && (
+        {images.length + keptImages.length < 8 && (
           <label className="flex flex-col items-center justify-center border-2 border-dashed border-dark-600 rounded-xl p-8 cursor-pointer hover:border-gold-600 transition-colors">
             <Upload size={24} className="text-dark-400 mb-2" />
             <p className="text-dark-300 text-sm font-medium">Subir fotos</p>
             <p className="text-dark-500 text-xs mt-1">
-              {images.length}/8 · JPG, PNG, WEBP
+              {images.length + keptImages.length}/8 · JPG, PNG, WEBP
             </p>
             <input
               type="file"
@@ -480,8 +583,10 @@ export function PublishAnimalForm({ sellerId, breeds, initialData }: Props) {
         {loading ? (
           <>
             <Loader2 size={18} className="animate-spin" />
-            Publicando...
+            {isEdit ? "Guardando..." : "Publicando..."}
           </>
+        ) : isEdit ? (
+          "Guardar cambios"
         ) : (
           "Publicar ejemplar"
         )}
