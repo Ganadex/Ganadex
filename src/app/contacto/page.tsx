@@ -7,8 +7,10 @@ export const metadata: Metadata = {
   description: "Ponte en contacto con el equipo de Ganadex. Estamos aquí para ayudarte.",
 };
 
+const phone = process.env.NEXT_PUBLIC_GANADEX_PHONE;
+
 const contactInfo = [
-  { icon: Phone, label: "Teléfono", value: "+57 300 000 0000" },
+  ...(phone ? [{ icon: Phone, label: "Teléfono", value: phone }] : []),
   { icon: Mail, label: "Email", value: "ganaderiasanfernando25@gmail.com" },
   { icon: MapPin, label: "Ubicación", value: "Colombia, Latinoamérica" },
   { icon: Clock, label: "Horario", value: "Lun–Vie, 8am–6pm COT" },

@@ -105,15 +105,17 @@ export function Footer() {
                 <MapPin size={15} className="text-gold-500 mt-0.5 shrink-0" />
                 <span className="text-dark-300 text-sm">Colombia, Latinoamérica</span>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone size={15} className="text-gold-500 shrink-0" />
-                <a
-                  href="tel:+573000000000"
-                  className="text-dark-300 hover:text-gold-400 text-sm transition-colors"
-                >
-                  +57 300 000 0000
-                </a>
-              </li>
+              {process.env.NEXT_PUBLIC_GANADEX_PHONE && (
+                <li className="flex items-center gap-3">
+                  <Phone size={15} className="text-gold-500 shrink-0" />
+                  <a
+                    href={`tel:${process.env.NEXT_PUBLIC_GANADEX_PHONE.replace(/\s/g, "")}`}
+                    className="text-dark-300 hover:text-gold-400 text-sm transition-colors"
+                  >
+                    {process.env.NEXT_PUBLIC_GANADEX_PHONE}
+                  </a>
+                </li>
+              )}
               <li className="flex items-center gap-3">
                 <Mail size={15} className="text-gold-500 shrink-0" />
                 <a
