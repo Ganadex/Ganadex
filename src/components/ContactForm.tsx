@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Loader2, CheckCircle } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 export function ContactForm() {
   const [form, setForm] = useState({
@@ -9,19 +10,41 @@ export function ContactForm() {
     email: "",
     subject: "",
     message: "",
+    website: "", // honeypot: los humanos no lo ven ni lo llenan
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
   const update = (k: keyof typeof form, v: string) =>
     setForm((prev) => ({ ...prev, [k]: v }));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+
+    // Si el campo trampa viene lleno es un bot: fingimos éxito y no guardamos nada.
+    if (form.website) {
+      setSuccess(true);
+      return;
+    }
+
     setLoading(true);
-    // Simulate send — integrate with email service here
-    await new Promise((r) => setTimeout(r, 1200));
+    const supabase = createClient();
+    const { error: insertError } = await supabase.from("contactos").insert({
+      nombre: form.name.trim(),
+      email: form.email.trim(),
+      asunto: form.subject.trim(),
+      mensaje: form.message.trim(),
+    });
     setLoading(false);
+
+    if (insertError) {
+      setError(
+        "No pudimos enviar tu mensaje. Inténtalo de nuevo en unos minutos o escríbenos por correo."
+      );
+      return;
+    }
     setSuccess(true);
   };
 
@@ -93,6 +116,26 @@ export function ContactForm() {
           className={`${inputClass} resize-none`}
         />
       </div>
+
+      {/* Campo trampa anti-spam: oculto para personas */}
+      <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <label>
+          No llenar este campo
+          <input
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={form.website}
+            onChange={(e) => update("website", e.target.value)}
+          />
+        </label>
+      </div>
+
+      {error && (
+        <p role="alert" className="text-red-400 text-sm">
+          {error}
+        </p>
+      )}
 
       <button
         type="submit"
