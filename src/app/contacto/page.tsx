@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 const contactInfo = [
   { icon: Phone, label: "Teléfono", value: "+57 300 000 0000" },
-  { icon: Mail, label: "Email", value: "info@ganadex.co" },
+  { icon: Mail, label: "Email", value: "ganaderiasanfernando25@gmail.com" },
   { icon: MapPin, label: "Ubicación", value: "Colombia, Latinoamérica" },
   { icon: Clock, label: "Horario", value: "Lun–Vie, 8am–6pm COT" },
 ];
