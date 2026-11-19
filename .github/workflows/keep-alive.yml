@@ -1,0 +1,22 @@
+name: Keep Supabase alive
+
+# El plan gratuito de Supabase pausa el proyecto tras ~1 semana sin actividad.
+# Esta tarea abre el catalogo (que consulta la base de datos) cada 3 dias.
+# Se puede borrar cuando haya trafico real o se pase al plan Pro.
+
+on:
+  schedule:
+    - cron: "0 14 */3 * *"
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Visit catalog page
+        run: |
+          curl --fail --silent --show-error --location \
+            --retry 3 --retry-delay 10 --max-time 60 \
+            --output /dev/null \
+            --write-out "HTTP %{http_code} in %{time_total}s\n" \
+            https://www.ganadex.co/ganado
