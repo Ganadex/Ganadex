@@ -8,6 +8,7 @@ import {
   List,
   User,
   LogOut,
+  Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
@@ -22,9 +23,10 @@ const navItems = [
 
 interface Props {
   user: SupabaseUser;
+  isAdmin?: boolean;
 }
 
-export function DashboardSidebar({ user }: Props) {
+export function DashboardSidebar({ user, isAdmin = false }: Props) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -54,7 +56,10 @@ export function DashboardSidebar({ user }: Props) {
         </div>
 
         <nav className="space-y-1">
-          {navItems.map(({ href, icon: Icon, label }) => (
+          {(isAdmin
+            ? [...navItems, { href: "/dashboard/mensajes", icon: Mail, label: "Mensajes" }]
+            : navItems
+          ).map(({ href, icon: Icon, label }) => (
             <Link
               key={href}
               href={href}
