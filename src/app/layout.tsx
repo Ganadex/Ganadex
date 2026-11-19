@@ -3,6 +3,7 @@ import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,11 +34,28 @@ export const metadata: Metadata = {
     "bovinos elite",
   ],
   authors: [{ name: "Ganadex" }],
+  // Base para que las imágenes y enlaces de vista previa usen URLs absolutas
+  metadataBase: new URL(SITE_URL),
   openGraph: {
     title: "Ganadex — Marketplace de Ganado de Elite",
     description: "El marketplace premium para compraventa de ganado de alta genética en Latinoamérica.",
     type: "website",
     locale: "es_CO",
+    siteName: SITE_NAME,
+    images: [
+      {
+        url: "/hero-bg.jpg",
+        width: 1672,
+        height: 941,
+        alt: "Ganadex — Marketplace de Ganado de Elite",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Ganadex — Marketplace de Ganado de Elite",
+    description: "El marketplace premium para compraventa de ganado de alta genética en Latinoamérica.",
+    images: ["/hero-bg.jpg"],
   },
 };
 

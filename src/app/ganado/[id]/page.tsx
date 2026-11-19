@@ -23,15 +23,35 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("ganado")
-    .select("nombre, descripcion, razas(nombre)")
+    .select("nombre, descripcion, razas(nombre), imagenes_ganado(url, es_portada, orden)")
     .eq("id", id)
     .single();
 
-  if (!data) return { title: "Ejemplar no encontrado" };
+  if (!data) return { title: "Ejemplar no encontrado", robots: { index: false } };
+
+  const description = data.descripcion.slice(0, 160);
+  const images = [...(data.imagenes_ganado ?? [])].sort(
+    (a, b) => Number(b.es_portada) - Number(a.es_portada) || (a.orden ?? 0) - (b.orden ?? 0)
+  );
+  const cover = images[0]?.url;
 
   return {
     title: data.nombre,
-    description: data.descripcion.slice(0, 160),
+    description,
+    alternates: { canonical: `/ganado/${id}` },
+    openGraph: {
+      title: data.nombre,
+      description,
+      type: "website",
+      url: `/ganado/${id}`,
+      ...(cover ? { images: [{ url: cover, alt: data.nombre }] } : {}),
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: data.nombre,
+      description,
+      ...(cover ? { images: [cover] } : {}),
+    },
   };
 }
 
