@@ -13,7 +13,7 @@ const COLOMBIA_STATES = [
   "Sucre","Tolima","Valle del Cauca","Vaupés","Vichada",
 ];
 
-interface SellerData {
+export interface SellerData {
   id?: string;
   nombre_completo: string;
   nombre_empresa: string;
@@ -47,7 +47,17 @@ const empty: SellerData = {
 
 export function SellerProfileForm({ userId, initialData }: Props) {
   const router = useRouter();
-  const [form, setForm] = useState<SellerData>(initialData ?? empty);
+  const [form, setForm] = useState<SellerData>(() => {
+    if (!initialData) return empty;
+    // La base de datos devuelve null en campos vacíos: los pasamos a texto vacío.
+    const clean = { ...empty };
+    (Object.keys(empty) as (keyof SellerData)[]).forEach((k) => {
+      const v = initialData[k];
+      if (v !== null && v !== undefined) (clean as Record<string, unknown>)[k] = v;
+    });
+    clean.id = initialData.id;
+    return clean;
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -61,11 +71,26 @@ export function SellerProfileForm({ userId, initialData }: Props) {
     setError("");
 
     const supabase = createClient();
-    const payload = { ...form, user_id: userId, updated_at: new Date().toISOString() };
+    // Solo los campos editables: verificado, calificación, etc. no los puede cambiar el vendedor.
+    const fields = {
+      nombre_completo: form.nombre_completo,
+      nombre_empresa: form.nombre_empresa,
+      telefono: form.telefono,
+      whatsapp: form.whatsapp,
+      email: form.email,
+      ubicacion: form.ubicacion,
+      estado: form.estado,
+      pais: form.pais,
+      bio: form.bio,
+      documento_identidad: form.documento_identidad,
+    };
 
     const { error: err } = initialData?.id
-      ? await supabase.from("vendedores").update(payload).eq("id", initialData.id)
-      : await supabase.from("vendedores").insert(payload);
+      ? await supabase
+          .from("vendedores")
+          .update({ ...fields, updated_at: new Date().toISOString() })
+          .eq("id", initialData.id)
+      : await supabase.from("vendedores").insert({ ...fields, user_id: userId });
 
     setLoading(false);
     if (err) { setError(err.message); return; }

@@ -14,7 +14,9 @@ export default async function SellersPage() {
 
   const { data: sellers } = await supabase
     .from("vendedores")
-    .select("*")
+    .select(
+      "id, nombre_completo, nombre_empresa, ubicacion, estado, avatar_url, calificacion, total_ventas"
+    )
     .eq("activo", true)
     .eq("verificado", true)
     .order("total_ventas", { ascending: false })

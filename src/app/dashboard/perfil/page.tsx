@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { SellerProfileForm } from "@/components/dashboard/SellerProfileForm";
+import { SellerProfileForm, type SellerData } from "@/components/dashboard/SellerProfileForm";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = { title: "Mi perfil — Ganadex" };
@@ -10,11 +10,9 @@ export default async function PerfilPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/auth/login");
 
-  const { data: seller } = await supabase
-    .from("vendedores")
-    .select("*")
-    .eq("user_id", user.id)
-    .single();
+  // Los datos privados (documento, teléfono, correo) solo se leen con esta función,
+  // que devuelve únicamente la fila del usuario con sesión iniciada.
+  const { data: seller } = await supabase.rpc("get_my_seller").single();
 
   if (!seller) redirect("/dashboard/vendedor/nuevo");
 
@@ -26,7 +24,7 @@ export default async function PerfilPage() {
           Información interna de tu cuenta de vendedor. No es visible para los compradores.
         </p>
       </div>
-      <SellerProfileForm userId={user.id} initialData={seller} />
+      <SellerProfileForm userId={user.id} initialData={seller as SellerData} />
     </div>
   );
 }
