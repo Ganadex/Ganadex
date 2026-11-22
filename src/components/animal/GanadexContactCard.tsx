@@ -1,6 +1,7 @@
 "use client";
 
-import { MessageCircle, ShieldCheck, BadgeCheck, Phone } from "lucide-react";
+import Link from "next/link";
+import { MessageCircle, ShieldCheck, BadgeCheck, Phone, Mail } from "lucide-react";
 
 // Sin estas variables (en Vercel y .env.local) los botones de contacto no se muestran.
 const GANADEX_WHATSAPP = process.env.NEXT_PUBLIC_GANADEX_WHATSAPP;
@@ -57,6 +58,17 @@ export function GanadexContactCard({ animalName }: Props) {
           <MessageCircle size={18} />
           Consultar por WhatsApp
         </a>
+      )}
+
+      {/* Sin número configurado: que la ficha nunca quede sin forma de contacto */}
+      {!whatsappUrl && !GANADEX_PHONE && (
+        <Link
+          href="/contacto"
+          className="w-full flex items-center justify-center gap-2.5 py-3.5 rounded-xl btn-gold font-bold text-sm"
+        >
+          <Mail size={18} />
+          Consultar por este ejemplar
+        </Link>
       )}
 
       {/* Teléfono */}
