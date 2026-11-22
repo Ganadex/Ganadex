@@ -101,7 +101,7 @@ export function AnimalCard({ animal, compact = false }: Props) {
           </div>
         </div>
 
-        {/* Footer: price + seller */}
+        {/* Footer: price + sello de verificación */}
         <div className="mt-auto flex items-end justify-between">
           <div>
             <p className="text-xs text-dark-400 mb-0.5">Precio</p>
@@ -110,14 +110,11 @@ export function AnimalCard({ animal, compact = false }: Props) {
             </p>
           </div>
 
-          {animal.seller && (
+          {/* No se muestra la identidad del vendedor: la venta la gestiona Ganadex */}
+          {animal.seller?.verificado && (
             <div className="flex items-center gap-1.5 text-right">
-              {animal.seller.verificado && (
-                <BadgeCheck size={13} className="text-gold-500 shrink-0" />
-              )}
-              <p className="text-dark-400 text-xs max-w-[90px] truncate">
-                {animal.seller.nombre_completo}
-              </p>
+              <BadgeCheck size={13} className="text-gold-500 shrink-0" />
+              <p className="text-dark-400 text-xs">Verificado</p>
             </div>
           )}
         </div>

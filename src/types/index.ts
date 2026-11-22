@@ -70,11 +70,8 @@ export interface Animal {
   created_at: string;
   updated_at?: string;
   breed?: Breed;
+  // Solo el sello de verificación es público; la identidad del vendedor no se expone.
   seller?: {
-    id: string;
-    nombre_completo: string;
-    ubicacion?: string;
-    estado?: string;
     verificado?: boolean;
   };
   images?: AnimalImage[];

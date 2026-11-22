@@ -11,7 +11,7 @@ export async function FeaturedAnimals() {
     .select(
       `*,
       breed:razas(*),
-      seller:vendedores(nombre_completo, ubicacion, estado, verificado),
+      seller:vendedores(verificado),
       images:imagenes_ganado(url, es_portada, orden)`
     )
     .eq("status", "disponible")

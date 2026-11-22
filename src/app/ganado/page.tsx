@@ -35,7 +35,7 @@ async function CatalogContent({ searchParams }: { searchParams: SearchParams }) 
   let query = supabase
     .from("ganado")
     .select(
-      `*, breed:razas(*), seller:vendedores(id, nombre_completo, ubicacion, estado, verificado),
+      `*, breed:razas(*), seller:vendedores(verificado),
       images:imagenes_ganado(url, es_portada, orden)`,
       { count: "exact" }
     )
